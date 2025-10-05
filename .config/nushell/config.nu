@@ -11,7 +11,7 @@ def get_git_branch [] {
 
 # プロンプト作成関数（ディレクトリ名 + ブランチ名）
 def create_left_prompt [] {
-    let user = $env.USERNAME
+    let user = ($env.USERNAME? | default $env.USER)
     let dir = ($env.PWD | path basename)
     let branch = get_git_branch
     if ($branch != "") {
