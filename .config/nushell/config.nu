@@ -8,17 +8,22 @@ def get_git_branch [] {
     }
 }
 
-# プロンプト作成関数（ディレクトリ名 + ブランチ名）
-def create_left_prompt [] {
-    let user = ($env.USERNAME? | default $env.USER)
-    let dir = ($env.PWD | path basename)
-    let branch = get_git_branch
-    if ($branch != "") {
-        $"(ansi blue)<($user)>(ansi reset) (ansi green_bold)($dir)(ansi reset) (ansi yellow)[($branch)](ansi reset)"
-    } else {
-        $"(ansi blue)<($user)>(ansi reset) (ansi green_bold)($dir)(ansi reset)"
-    }
+def get_user [] {
+  whoami | str trim
 }
+
+def create_left_prompt [] {
+  let user = get_user
+  let dir = ($env.PWD | path basename)
+  let branch = get_git_branch
+
+  if ($branch != "") {
+    $"(ansi blue)<($user)>(ansi reset) (ansi green_bold)($dir)(ansi reset) (ansi yellow)[($branch)](ansi reset)"
+  } else {
+    $"(ansi blue)<($user)>(ansi reset) (ansi green_bold)($dir)(ansi reset)"
+  }
+}
+
 
 # プロンプトコマンド設定
 $env.PROMPT_COMMAND = {create_left_prompt}
